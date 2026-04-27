@@ -1,43 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Il test politico definitivo per scoprire il tuo orientamento</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Politico</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0f172a;
+  color:#e5e7eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.container {
+  background:#1e293b;
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:700px;
+}
+
+button {
+  background:#3b82f6;
+  border:none;
+  padding:10px;
+  margin:10px 0;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover { background:#2563eb; }
+</style>
 </head>
+
 <body>
-  <main class="app">
-    <section id="start" class="panel hero">
-      <div class="stamp">Ministero dei Compleanni</div>
-      <h1>Il test politico definitivo per scoprire il tuo orientamento</h1>
-      <p class="lead">Federico, 28 anni, zero possibilità di uscirne pulito.</p>
-      <button id="startBtn">Inizia il test</button>
-    </section>
 
-    <section id="quiz" class="panel hidden">
-      <div class="topbar">
-        <span id="counter"></span>
-        <div class="progress"><div id="progressFill"></div></div>
-      </div>
-      <h2 id="questionTitle"></h2>
-      <div id="answerArea"></div>
-      <div class="actions">
-        <button id="nextBtn" disabled>Prossima domanda</button>
-      </div>
-    </section>
+<div class="container" id="start">
+  <h1>Il test politico definitivo</h1>
+  <button onclick="start()">Inizia</button>
+</div>
 
-    <section id="result" class="panel hidden result">
-      <div class="stamp">Esito ufficiale</div>
-      <h2>Auguri Federico.</h2>
-      <p>Dopo un’analisi approfondita delle tue risposte, emergono tendenze… come dire… leggermente nostalgiche dell’ordine, della disciplina e delle decisioni prese senza troppe discussioni.</p>
-      <p class="verdict">Risultato: sei fascista.</p>
-      <p>Ovviamente lo sappiamo tutti che sei l’antifascista da manifestazione, assemblea e indignazione strutturale. Proprio per questo il test ha deciso di colpirti dove fa più male.</p>
-      <p>Buon 28° compleanno. Che il prossimo anno ti porti lucidità politica, salute mentale e almeno una discussione in meno su WhatsApp.</p>
-      <button id="restartBtn">Rifai il test e nega tutto</button>
-    </section>
-  </main>
+<div class="container" id="quiz" style="display:none">
+  <h2 id="question"></h2>
+  <div id="answers"></div>
+  <button onclick="next()">Prossima</button>
+</div>
 
-  <script src="script.js"></script>
+<div class="container" id="result" style="display:none">
+  <h2>Risultato</h2>
+  <p>Dopo un’attenta analisi delle tue risposte...</p>
+  <h1 style="color:#fb7185">sei fascista</h1>
+</div>
+
+<script>
+let q = 0;
+
+const questions = [
+{
+text: "Chi è stato il miglior Presidente del Consiglio?",
+answers: ["Berlusconi","Meloni","Prodi","Berlinguer"]
+},
+{
+text: "Chi è stato il miglior Presidente della Repubblica?",
+answers: ["Napolitano","Leone","Ciampi","Saragat"]
+},
+{
+text: "Chi tra questi è il più bravino?",
+answers: ["Stalin","Lenin","Mao","Che"]
+},
+{
+text: "Chi è meno di destra?",
+answers: ["Tonin","Barrese","Caprara","Mussolini"]
+},
+{
+text: "Quale canzone è più coerente?",
+answers: ["Fischia il vento","Faccetta nera","Lili Marleen","Bella ciao"]
+}
+];
+
+function start(){
+document.getElementById("start").style.display="none";
+document.getElementById("quiz").style.display="block";
+load();
+}
+
+function load(){
+document.getElementById("question").innerText = questions[q].text;
+let html="";
+questions[q].answers.forEach(a=>{
+html+=`<button onclick="select()">${a}</button><br>`;
+});
+document.getElementById("answers").innerHTML=html;
+}
+
+function select(){}
+
+function next(){
+q++;
+if(q>=questions.length){
+document.getElementById("quiz").style.display="none";
+document.getElementById("result").style.display="block";
+}else{
+load();
+}
+}
+</script>
+
 </body>
 </html>
