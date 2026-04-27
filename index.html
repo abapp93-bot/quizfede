@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Il test politico definitivo per scoprire il tuo orientamento</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section id="start" class="panel hero">
+      <div class="stamp">Ministero dei Compleanni</div>
+      <h1>Il test politico definitivo per scoprire il tuo orientamento</h1>
+      <p class="lead">Federico, 28 anni, zero possibilità di uscirne pulito.</p>
+      <button id="startBtn">Inizia il test</button>
+    </section>
+
+    <section id="quiz" class="panel hidden">
+      <div class="topbar">
+        <span id="counter"></span>
+        <div class="progress"><div id="progressFill"></div></div>
+      </div>
+      <h2 id="questionTitle"></h2>
+      <div id="answerArea"></div>
+      <div class="actions">
+        <button id="nextBtn" disabled>Prossima domanda</button>
+      </div>
+    </section>
+
+    <section id="result" class="panel hidden result">
+      <div class="stamp">Esito ufficiale</div>
+      <h2>Auguri Federico.</h2>
+      <p>Dopo un’analisi approfondita delle tue risposte, emergono tendenze… come dire… leggermente nostalgiche dell’ordine, della disciplina e delle decisioni prese senza troppe discussioni.</p>
+      <p class="verdict">Risultato: sei fascista.</p>
+      <p>Ovviamente lo sappiamo tutti che sei l’antifascista da manifestazione, assemblea e indignazione strutturale. Proprio per questo il test ha deciso di colpirti dove fa più male.</p>
+      <p>Buon 28° compleanno. Che il prossimo anno ti porti lucidità politica, salute mentale e almeno una discussione in meno su WhatsApp.</p>
+      <button id="restartBtn">Rifai il test e nega tutto</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
