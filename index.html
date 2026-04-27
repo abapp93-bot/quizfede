@@ -1,116 +1,587 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Politico</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il test politico definitivo</title>
+  <style>
+    :root {
+      --bg: #070b16;
+      --bg2: #0f172a;
+      --panel: rgba(15, 23, 42, 0.90);
+      --panel2: rgba(30, 41, 59, 0.92);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.24);
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --danger: #fb7185;
+    }
 
-<style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#0f172a;
-  color:#e5e7eb;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
+    * { box-sizing: border-box; }
 
-.container {
-  background:#1e293b;
-  padding:30px;
-  border-radius:20px;
-  width:90%;
-  max-width:700px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56, 189, 248, .16), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(129, 140, 248, .20), transparent 32%),
+        linear-gradient(135deg, #050816, #0f172a);
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
 
-button {
-  background:#3b82f6;
-  border:none;
-  padding:10px;
-  margin:10px 0;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-}
+    .app {
+      width: min(1040px, 100%);
+    }
 
-button:hover { background:#2563eb; }
-</style>
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 26px 90px rgba(0, 0, 0, .42);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: clamp(24px, 4vw, 54px);
+    }
+
+    .hidden { display: none; }
+
+    .hero { text-align: center; }
+
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 13px;
+      font-weight: 850;
+      margin: 0 0 18px;
+    }
+
+    h1, h2 {
+      margin: 0 0 20px;
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+
+    h1 { font-size: clamp(44px, 7vw, 88px); }
+    h2 { font-size: clamp(30px, 4.4vw, 56px); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 640px;
+      margin: 0 auto 34px;
+    }
+
+    button {
+      border: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #04111f;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    button:disabled { opacity: .38; cursor: not-allowed; transform: none; }
+
+    .topbar {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 10px;
+      background: rgba(148, 163, 184, .18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .25s ease;
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, .7);
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .32);
+    }
+
+    .card.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, .18), 0 20px 55px rgba(0, 0, 0, .32);
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #111827;
+    }
+
+    .label {
+      padding: 16px;
+      font-weight: 850;
+      line-height: 1.25;
+      min-height: 64px;
+    }
+
+    .text-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .text-answer {
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      box-shadow: none;
+      line-height: 1.35;
+    }
+
+    .text-answer.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, .18);
+    }
+
+    .input-panel {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .slider-value {
+      font-size: 64px;
+      font-weight: 950;
+      color: var(--accent);
+      letter-spacing: -.055em;
+      margin: 4px 0 12px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 136px;
+      margin-top: 14px;
+      border: 1px solid rgba(148, 163, 184, .3);
+      background: rgba(2, 6, 23, .38);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 16px;
+      font: inherit;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, .12);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 10px 0 0;
+    }
+
+    .countdown {
+      display: inline-grid;
+      place-items: center;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: rgba(251, 113, 133, .12);
+      color: var(--danger);
+      border: 1px solid rgba(251, 113, 133, .35);
+      font-size: 42px;
+      font-weight: 950;
+      margin: 12px 0 8px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 26px;
+    }
+
+    .result p {
+      font-size: 20px;
+      line-height: 1.58;
+      color: #dbe4f0;
+    }
+
+    .verdict {
+      font-size: clamp(44px, 7vw, 88px);
+      color: var(--danger);
+      font-weight: 950;
+      letter-spacing: -.06em;
+      line-height: .92;
+      margin: 28px 0;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .panel { border-radius: 22px; }
+      .answers-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 44px; }
+    }
+  </style>
 </head>
-
 <body>
+  <main class="app">
+    <section id="start" class="panel hero">
+      <p class="eyebrow">Questionario politico</p>
+      <h1>Il test politico definitivo per scoprire il tuo orientamento</h1>
+      <p class="subtitle">Rispondi alle domande. Il risultato verrà elaborato automaticamente.</p>
+      <button id="startBtn">Inizia il test</button>
+    </section>
 
-<div class="container" id="start">
-  <h1>Il test politico definitivo</h1>
-  <button onclick="start()">Inizia</button>
-</div>
+    <section id="quiz" class="panel hidden">
+      <div class="topbar">
+        <span id="counter"></span>
+        <div class="progress"><div id="progressFill"></div></div>
+      </div>
+      <h2 id="questionTitle"></h2>
+      <div id="answerArea"></div>
+      <div class="actions">
+        <button id="nextBtn" disabled>Prossima domanda</button>
+      </div>
+    </section>
 
-<div class="container" id="quiz" style="display:none">
-  <h2 id="question"></h2>
-  <div id="answers"></div>
-  <button onclick="next()">Prossima</button>
-</div>
+    <section id="result" class="panel result hidden">
+      <p class="eyebrow">Risultato del test</p>
+      <h2>Auguri Federico.</h2>
+      <p>Dopo un’analisi approfondita delle tue risposte, emergono tendenze… come dire… leggermente nostalgiche dell’ordine, della disciplina e delle decisioni prese senza troppe discussioni.</p>
+      <div class="verdict">Risultato: sei fascista.</div>
+      <p>Il dato è tecnicamente inspiegabile, considerando che nella vita reale sei quello che va a manifestare, discute di antifascismo e riesce a trasformare una birra in un’assemblea.</p>
+      <p>Buon 28° compleanno. Il test è finito: puoi tornare a negare ogni accusa.</p>
+      <button id="restartBtn">Rifai il test</button>
+    </section>
+  </main>
 
-<div class="container" id="result" style="display:none">
-  <h2>Risultato</h2>
-  <p>Dopo un’attenta analisi delle tue risposte...</p>
-  <h1 style="color:#fb7185">sei fascista</h1>
-</div>
-
-<script>
-let q = 0;
-
-const questions = [
-{
-text: "Chi è stato il miglior Presidente del Consiglio?",
-answers: ["Berlusconi","Meloni","Prodi","Berlinguer"]
-},
-{
-text: "Chi è stato il miglior Presidente della Repubblica?",
-answers: ["Napolitano","Leone","Ciampi","Saragat"]
-},
-{
-text: "Chi tra questi è il più bravino?",
-answers: ["Stalin","Lenin","Mao","Che"]
-},
-{
-text: "Chi è meno di destra?",
-answers: ["Tonin","Barrese","Caprara","Mussolini"]
-},
-{
-text: "Quale canzone è più coerente?",
-answers: ["Fischia il vento","Faccetta nera","Lili Marleen","Bella ciao"]
-}
+  <script>
+    const questions = [
+      {
+            "type": "imageChoice",
+            "title": "Chi, secondo te, tra questi è stato (o sarebbe stato) un ottimo Presidente del Consiglio?",
+            "options": [
+                  "Silvio Berlusconi",
+                  "Giorgia Meloni",
+                  "Romano Prodi",
+                  "Enrico Berlinguer"
+            ]
+      },
+      {
+            "type": "imageChoice",
+            "title": "Chi, tra questi, è stato secondo te il miglior Presidente della Repubblica?",
+            "options": [
+                  "Giorgio Napolitano",
+                  "Giovanni Leone",
+                  "Carlo Azeglio Ciampi",
+                  "Giuseppe Saragat"
+            ]
+      },
+      {
+            "type": "imageChoice",
+            "title": "Chi, tra questi “esponenti del marxismo ortodosso”, è stato il più bravino?",
+            "options": [
+                  "Stalin",
+                  "Lenin",
+                  "Mao Zedong",
+                  "Che Guevara"
+            ]
+      },
+      {
+            "type": "imageChoice",
+            "title": "Chi, tra i seguenti, è meno di destra?",
+            "options": [
+                  "Federico Tonin",
+                  "Giulia Barrese",
+                  "Enrico Caprara",
+                  "Benito Mussolini"
+            ]
+      },
+      {
+            "type": "textChoice",
+            "title": "Sesso, baci, uccidi — scegli la combinazione",
+            "options": [
+                  "Sesso: Ilaria Salis · Baci: Elly Schlein · Uccidi: Benito Mussolini",
+                  "Sesso: Benito Mussolini · Baci: Elly Schlein · Uccidi: Ilaria Salis",
+                  "Sesso: Elly Schlein · Baci: Benito Mussolini · Uccidi: Ilaria Salis",
+                  "Sesso: Ilaria Salis · Baci: Benito Mussolini · Uccidi: Elly Schlein"
+            ]
+      },
+      {
+            "type": "imageChoice",
+            "title": "Quale tra questi leader politici ammiri di più?",
+            "options": [
+                  "Donald Trump",
+                  "Benjamin Netanyahu",
+                  "Vladimir Putin",
+                  "Mohamed Hamdan Dagalo"
+            ]
+      },
+      {
+            "type": "imageChoice",
+            "title": "Quale tra questi leader politici ammiri di meno?",
+            "options": [
+                  "Iosif Stalin",
+                  "Mao Zedong",
+                  "Kim Jong-un",
+                  "Pol Pot"
+            ]
+      },
+      {
+            "type": "slider",
+            "title": "Il tasso di disoccupazione in Italia si attesta al 5,3%, con sempre più persone in difficoltà ad arrivare a fine mese. A tal proposito: quanto è importante per te mostrare vicinanza al popolo palestinese?",
+            "note": "Motiva la risposta"
+      },
+      {
+            "type": "imageChoice",
+            "title": "Avete sempre criticato aspramente l’operato delle forze dell’ordine, preferendo — in caso di pericolo — l’intervento di Superman e della Fatina dei denti. Chi tra questi due ha saputo offrirti miglior supporto?",
+            "options": [
+                  "Superman",
+                  "The Rock ne L’acchiappadenti"
+            ]
+      },
+      {
+            "type": "textChoice",
+            "title": "Per vincere le elezioni a Vigevano avete deciso di presentarvi con il classico “campo largo”. Mi confermi che sono vere le voci del lungo corteggiamento nei confronti di Luca Battista? L’accordo è poi svanito per volontà di quest’ultimo?",
+            "options": [
+                  "Sì, e purtroppo sì :(",
+                  "No, purtroppo sì :(",
+                  "Sì, ma ci stiamo ancora lavorando",
+                  "Non posso rispondere: ci sono indagini in corso"
+            ]
+      },
+      {
+            "type": "open",
+            "title": "Ho letto attentamente il vostro programma elettorale. Mi piace molto l’idea delle selezioni per poter diventare un “bimbo di Rossella”. Mi puoi spoilerare le prove che dovrò sostenere? PS: sono già munito di buzza e gobba del bisonte.",
+            "placeholder": "Scrivi qui la risposta istituzionale..."
+      },
+      {
+            "type": "open",
+            "title": "Vorrei che analizzassi una situazione ben precisa e, perché no, facessi anche un po’ di autocritica. In un confronto politico con Santa, cosa ti manca per riuscire a tenergli testa?",
+            "placeholder": "Momento autocritica..."
+      },
+      {
+            "type": "textChoice",
+            "title": "Quale tra queste canzoni è rimasta più fedele ai propri ideali nel corso del tempo?",
+            "options": [
+                  "Fischia il vento",
+                  "Faccetta nera",
+                  "Lili Marleen",
+                  "Bella ciao"
+            ]
+      },
+      {
+            "type": "timedOpen",
+            "title": "Domanda interattiva con il pubblico. Tre persone presenti citeranno un nome: dovrai dire la prima cosa che ti viene in mente.",
+            "note": "Hai 5 secondi.",
+            "placeholder": "Prima cosa che ti viene in mente..."
+      }
 ];
 
-function start(){
-document.getElementById("start").style.display="none";
-document.getElementById("quiz").style.display="block";
-load();
-}
+    let current = 0;
+    const savedAnswers = [];
 
-function load(){
-document.getElementById("question").innerText = questions[q].text;
-let html="";
-questions[q].answers.forEach(a=>{
-html+=`<button onclick="select()">${a}</button><br>`;
-});
-document.getElementById("answers").innerHTML=html;
-}
+    const start = document.getElementById("start");
+    const quiz = document.getElementById("quiz");
+    const result = document.getElementById("result");
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const counter = document.getElementById("counter");
+    const progressFill = document.getElementById("progressFill");
+    const questionTitle = document.getElementById("questionTitle");
+    const answerArea = document.getElementById("answerArea");
 
-function select(){}
+    function imgName(questionIndex, optionIndex) {
+      const letters = ["a", "b", "c", "d"];
+      return `images/q${questionIndex + 1}-${letters[optionIndex]}.jpg`;
+    }
 
-function next(){
-q++;
-if(q>=questions.length){
-document.getElementById("quiz").style.display="none";
-document.getElementById("result").style.display="block";
-}else{
-load();
-}
-}
-</script>
+    function fallbackImage(img) {
+      img.onerror = null;
+      img.src = "images/placeholder.svg";
+    }
 
+    function renderQuestion() {
+      const q = questions[current];
+      nextBtn.disabled = true;
+      nextBtn.textContent = current === questions.length - 1 ? "Vedi risultato" : "Prossima domanda";
+      counter.textContent = `Domanda ${current + 1} di ${questions.length}`;
+      progressFill.style.width = `${(current / questions.length) * 100}%`;
+      questionTitle.textContent = q.title;
+      answerArea.innerHTML = "";
+
+      if (q.type === "imageChoice") {
+        const grid = document.createElement("div");
+        grid.className = "answers-grid";
+        q.options.forEach((option, index) => {
+          const card = document.createElement("article");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="${imgName(current, index)}" alt="${option}" onerror="fallbackImage(this)">
+            <div class="label">${option}</div>
+          `;
+          card.addEventListener("click", () => {
+            document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
+            card.classList.add("selected");
+            savedAnswers[current] = option;
+            nextBtn.disabled = false;
+          });
+          grid.appendChild(card);
+        });
+        answerArea.appendChild(grid);
+      }
+
+      if (q.type === "textChoice") {
+        const list = document.createElement("div");
+        list.className = "text-list";
+        q.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "text-answer";
+          btn.textContent = option;
+          btn.addEventListener("click", () => {
+            document.querySelectorAll(".text-answer").forEach(el => el.classList.remove("selected"));
+            btn.classList.add("selected");
+            savedAnswers[current] = option;
+            nextBtn.disabled = false;
+          });
+          list.appendChild(btn);
+        });
+        answerArea.appendChild(list);
+      }
+
+      if (q.type === "slider") {
+        answerArea.innerHTML = `
+          <div class="input-panel">
+            <div>Valore selezionato:</div>
+            <div class="slider-value" id="sliderValue">5</div>
+            <input id="slider" type="range" min="1" max="10" value="5">
+            <p class="small">${q.note || ""}</p>
+            <textarea id="motivation" placeholder="Motiva la risposta."></textarea>
+          </div>
+        `;
+        const slider = document.getElementById("slider");
+        const sliderValue = document.getElementById("sliderValue");
+        slider.addEventListener("input", () => sliderValue.textContent = slider.value);
+        savedAnswers[current] = { value: "5", motivation: "" };
+        nextBtn.disabled = false;
+      }
+
+      if (q.type === "open") {
+        answerArea.innerHTML = `
+          <div class="input-panel">
+            <textarea id="openAnswer" placeholder="${q.placeholder || "Scrivi qui..."}"></textarea>
+          </div>
+        `;
+        savedAnswers[current] = "";
+        nextBtn.disabled = false;
+      }
+
+      if (q.type === "timedOpen") {
+        answerArea.innerHTML = `
+          <div class="input-panel">
+            <p class="small">${q.note}</p>
+            <div class="countdown" id="countdown">5</div>
+            <textarea id="timedAnswer" placeholder="${q.placeholder}"></textarea>
+          </div>
+        `;
+        savedAnswers[current] = "";
+        nextBtn.disabled = false;
+
+        let seconds = 5;
+        const countdown = document.getElementById("countdown");
+        const timer = setInterval(() => {
+          seconds -= 1;
+          countdown.textContent = seconds;
+          if (seconds <= 0) {
+            clearInterval(timer);
+            countdown.textContent = "0";
+          }
+        }, 1000);
+      }
+    }
+
+    startBtn.addEventListener("click", () => {
+      start.classList.add("hidden");
+      quiz.classList.remove("hidden");
+      renderQuestion();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      const q = questions[current];
+
+      if (q.type === "slider") {
+        savedAnswers[current] = {
+          value: document.getElementById("slider").value,
+          motivation: document.getElementById("motivation").value
+        };
+      }
+
+      if (q.type === "open") {
+        savedAnswers[current] = document.getElementById("openAnswer").value;
+      }
+
+      if (q.type === "timedOpen") {
+        savedAnswers[current] = document.getElementById("timedAnswer").value;
+      }
+
+      current += 1;
+
+      if (current >= questions.length) {
+        quiz.classList.add("hidden");
+        result.classList.remove("hidden");
+      } else {
+        renderQuestion();
+      }
+    });
+
+    restartBtn.addEventListener("click", () => {
+      current = 0;
+      savedAnswers.length = 0;
+      result.classList.add("hidden");
+      start.classList.remove("hidden");
+    });
+  </script>
 </body>
 </html>
